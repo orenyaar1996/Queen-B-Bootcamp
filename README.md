@@ -15,7 +15,7 @@ This app was developed during a one-week bootcamp hosted by AppsFlyer and QueenB
 
 ## Tech Stack
 - **Frontend:** React.js
-- **Backend:** Node.js with Express.js
+- **Backend:** Node.js
 - **Database:** PostgreSQL
 - **Version Control:** Git
 - **Deployment:** Docker
