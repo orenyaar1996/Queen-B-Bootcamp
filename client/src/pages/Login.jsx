@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LoginForm from '../components/LoginForm/LoginForm'; // Import the LoginForm component
+import LoginForm from '../components/LoginForm/LoginForm';
 import './Login.css';
 
 function Login() {
@@ -7,21 +7,32 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   // Function to handle login submission
-  const handleLogin = (fullName, password) => {
-    setLoading(true); // Start loading state when login is initiated
-    setErrorMessage(''); // Clear any previous error messages
+  const handleLogin = (username, password) => {
+    setLoading(true);
+    setErrorMessage('');
 
-    // Simulate an API call (you would replace this with an actual API call)
-    setTimeout(() => {
-      // Example logic: If fullName and password match these credentials, login is successful
-      if (fullName === 'John Doe' && password === 'password123') {
-        alert('Login successful!');
-        // Here you can redirect to another page or perform another action on success
-      } else {
+    // Encode the parameters for the URL
+    const params = new URLSearchParams({ username, password });
+
+    fetch(`http://localhost:5001/login?${params}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Invalid credentials');
+        }
+        return response.text(); // Or response.json() if you return JSON
+      })
+      .then(data => {
+        alert(data); // Login successful message
+        // Handle success (e.g., redirect or update state)
+      })
+      .catch(error => {
+        console.error('Error:', error);
         setErrorMessage('Invalid credentials. Please try again.');
-      }
-      setLoading(false); // Stop loading state after checking the credentials
-    }, 1000);
+      })
+      .finally(() => {
+        setLoading(false); // Stop loading state after the API call is complete
+      });
+
   };
 
   return (

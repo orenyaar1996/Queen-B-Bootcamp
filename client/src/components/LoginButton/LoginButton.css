@@ -12,5 +12,6 @@ button {
   
   button:hover {
     background-color: #6c757d; /* Grey background on hover */
-    color: white; /* White text on hover */
-  }
+    color: white; /* White text on hover */
+}
+

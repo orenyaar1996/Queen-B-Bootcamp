@@ -3,26 +3,35 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 const port = process.env.PORT || 5001;
+const startMentors = require('./mentors');
+const startUsers = require('./users');
 
-/*
-CORS (Cross-Origin Resource Sharing) is a browser security feature that restricts
-cross-origin HTTP requests with other servers and specifies which domains access your resources.
-We will use this Node.js package to allow cross-origin requests.
- */
-app.use(cors());
-app.use(express.json());
-// enables the server to serve the client app without running it
-app.use(express.static(path.join(__dirname, '../client/build')));
+const { Client } = require('pg');
 
-app.get('/api/helloworld', (req, res) => {
-  res.send('Hello Girls');
-});
+const startServer = async () => {
+  app.use(cors());
+  app.use(express.json());
+  // enables the server to serve the client app without running it
+  app.use(express.static(path.join(__dirname, '../client/build')));
 
-app.get('/*', (req, res) => {
-  // res.send('Anything else');
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
+    const DB = new Client({
+      user: 'postgres',
+      host: 'localhost',
+      database: 'postgres',
+      password: 'Op1234',
+      port: 5432,
+  });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+  DB.connect()
+      .then(() => console.log('Connected to the database'))
+      .catch(err => console.error('Connection error', err.stack));
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+
+  startMentors(app, DB);
+  startUsers(app, DB);
+
+};
+
+startServer();
